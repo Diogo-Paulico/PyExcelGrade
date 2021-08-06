@@ -55,11 +55,59 @@ student_format.set_font_size(10)
 worksheet.merge_range('B9:B10', 'Nome', merge_format)
 
 
+percent_fmt = workbook.add_format({'num_format': '0%'})
+# worksheet.merge_range('C9:C10', 0.10, percent_fmt);
+
+
 for i in range(1,numberStudents+1):
     worksheet.write_number((10+i),0,i,num_format)
     worksheet.write_string((10+i),1,'Aluno/a',student_format)
     
+groupsDict = {
+    "Capacidades e Conhecimentos": {
+        1: {
+            "DIAG" : 0,
+            "Teste 1": 0.25,
+            "Teste 2": 0.25
+        },
+        2: {
+            "Dim. Pratica": 0.1,
+            "Leit": 0.05,
+            "Oral": 0.05,
+            "Escr": 0.05
+        }
+    }
+}
 
+
+startGroup = {
+    "row": 10,
+    "col": 2 
+}
+
+currentGroup = {
+    "row": 10,
+    "col": 2
+}
+
+groupTot = 0
+
+
+
+for i in groupsDict:
+    for j in groupsDict[i]:
+        for k in groupsDict[i][j]:
+            worksheet.write(currentGroup["row"], currentGroup["col"], groupsDict[i][j][k],percent_fmt)
+            worksheet.write(currentGroup["row"] - 1, currentGroup["col"], k)
+            currentGroup['col'] += 1;
+            groupTot += groupsDict[i][j][k]
+        worksheet.write(currentGroup["row"], currentGroup["col"], groupTot,percent_fmt)
+        currentGroup['col'] += 1;
+        groupTot = 0
+    worksheet.merge_range(startGroup['row'] - 2, startGroup['col'], currentGroup["row"] - 2, currentGroup["col"] - 1, i)
+
+
+        
 
 
 
