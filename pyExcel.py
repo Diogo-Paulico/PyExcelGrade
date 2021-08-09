@@ -76,13 +76,47 @@ groupsDict = {
             "Oral": 0.05,
             "Escr": 0.05
         }
+    },
+    "Atitudes e Valores":{
+        1:{
+            "R/RESP": 0.08,
+            "I/EM": 0.05,
+            "CTAR": 0.08,
+            "AUT": 0.02,
+            "PONT": 0.02
+        }
     }
 }
+
+group_titles_format = workbook.add_format()
+group_titles_format.set_right(6)
+group_titles_format.set_left(6)
+group_titles_format.set_top(2)
+group_titles_format.set_bottom(1)
+group_titles_format.set_align('center')
+group_titles_format.set_align('vcenter')
+group_titles_format.set_bold()
+
+subgroupSumFormat = workbook.add_format()
+subgroupSumFormat.set_bold()
+subgroupSumFormat.set_border(1)
+subgroupSumFormat.set_right(6)
+
+subGroupMaxFormat = workbook.add_format()
+subGroupMaxFormat.set_bold()
+subGroupMaxFormat.set_border(1)
+subGroupMaxFormat.set_right(6)
+subGroupMaxFormat.set_num_format('0%')
 
 
 startGroup = {
     "row": 10,
     "col": 2 
+}
+
+startSubGroup = {
+    "row": 10,
+    "col" : 2
 }
 
 currentGroup = {
@@ -91,20 +125,49 @@ currentGroup = {
 }
 
 groupTot = 0
+numSubGroupFields = 0
+formulaString = ""
+weightCell = ""
 
-
+subGroupsValueCols = []
 
 for i in groupsDict:
     for j in groupsDict[i]:
         for k in groupsDict[i][j]:
             worksheet.write(currentGroup["row"], currentGroup["col"], groupsDict[i][j][k],percent_fmt)
             worksheet.write(currentGroup["row"] - 1, currentGroup["col"], k)
-            currentGroup['col'] += 1;
-            groupTot += groupsDict[i][j][k]
-        worksheet.write(currentGroup["row"], currentGroup["col"], groupTot,percent_fmt)
+            currentGroup['col'] += 1
+            numSubGroupFields += 1
+            # groupTot += groupsDict[i][j][k]
+        worksheet.write_formula(currentGroup["row"], currentGroup["col"],'=SUM({}:{})'.format(xl_rowcol_to_cell(startSubGroup["row"], startSubGroup["col"]), xl_rowcol_to_cell(currentGroup["row"],currentGroup['col'] - 1)),subGroupMaxFormat)
+        subGroupsValueCols.append(currentGroup["col"])
+        for h in range(1,numberStudents+1):
+            for s in range (1, numSubGroupFields + 1):
+                weightCell = xl_rowcol_to_cell(currentGroup['row'], currentGroup['col'] - s)
+                formulaString += '+({}*{})'.format(weightCell, xl_rowcol_to_cell(currentGroup['row'] + h, currentGroup['col'] - s)) ##move rows to get aliiggn, currentGroup row moves without saving
+            worksheet.write_formula(currentGroup['row'] + h, currentGroup['col'], '=' + formulaString, subgroupSumFormat)
+            formulaString = ""
+        
+        numSubGroupFields = 0
         currentGroup['col'] += 1;
-        groupTot = 0
-    worksheet.merge_range(startGroup['row'] - 2, startGroup['col'], currentGroup["row"] - 2, currentGroup["col"] - 1, i)
+        startSubGroup['col'] = currentGroup["col"]
+        # groupTot = 0
+    worksheet.merge_range(startGroup['row'] - 2, startGroup['col'], currentGroup["row"] - 2, currentGroup["col"] - 1, i, group_titles_format)
+    startGroup['col'] = currentGroup['col']
+    startGroup['row'] = currentGroup['row']
+
+
+for i in range(0, numberStudents + 1):
+    formulaString = ""
+    for j in subGroupsValueCols:
+        formulaString += "+{}".format(xl_rowcol_to_cell(currentGroup["row"] + i ,j))
+    worksheet.write_formula(currentGroup['row'] + i, currentGroup["col"], formulaString, percent_fmt if (i == 0) else None)
+    formulaString = ""
+
+
+
+currentGroup['col'] += 1
+
 
 
         
