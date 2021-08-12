@@ -58,11 +58,21 @@ worksheet.merge_range('B9:B10', 'Nome', merge_format)
 percent_fmt = workbook.add_format({'num_format': '0%'})
 # worksheet.merge_range('C9:C10', 0.10, percent_fmt);
 
+percent_center_fmt = workbook.add_format({'num_format': '0%'})
+percent_center_fmt.set_align('center')
+percent_center_fmt.set_border(1)
+percent_center_fmt.set_font_size(10)
 
-for i in range(1,numberStudents+1):
-    worksheet.write_number((10+i),0,i,num_format)
-    worksheet.write_string((10+i),1,'Aluno/a',student_format)
-    
+
+field_name = workbook.add_format()
+field_name.set_align('center')
+field_name.set_border(1)
+field_name.set_bold()
+field_name.set_font_size(9)
+
+
+
+
 groupsDict = {
     "Capacidades e Conhecimentos": {
         1: {
@@ -101,12 +111,47 @@ subgroupSumFormat = workbook.add_format()
 subgroupSumFormat.set_bold()
 subgroupSumFormat.set_border(1)
 subgroupSumFormat.set_right(6)
+subgroupSumFormat.set_num_format('0.00')
+subgroupSumFormat.set_font_size(10)
+subgroupSumFormat.set_align('center')
 
 subGroupMaxFormat = workbook.add_format()
 subGroupMaxFormat.set_bold()
 subGroupMaxFormat.set_border(1)
 subGroupMaxFormat.set_right(6)
 subGroupMaxFormat.set_num_format('0%')
+subGroupMaxFormat.set_align('center')
+subGroupMaxFormat.set_font_size(10)
+
+
+fieldValueFormat = workbook.add_format()
+fieldValueFormat.set_top(1)
+fieldValueFormat.set_right(1)
+fieldValueFormat.set_bottom(1)
+fieldValueFormat.set_align('center')
+fieldValueFormat.set_font_size(10)
+
+
+totalMaxFormat = workbook.add_format()
+totalMaxFormat.set_top(1)
+totalMaxFormat.set_right(1)
+totalMaxFormat.set_bottom(1)
+totalMaxFormat.set_num_format('0%')
+totalMaxFormat.set_bold()
+totalMaxFormat.set_font_size(10)
+totalMaxFormat.set_align('center')
+
+
+totalValueFormat = workbook.add_format()
+totalValueFormat.set_top(1)
+totalValueFormat.set_right(1)
+totalValueFormat.set_bottom(1)
+totalValueFormat.set_num_format('0.00')
+totalValueFormat.set_bold()
+totalValueFormat.set_align('center')
+totalValueFormat.set_font_size(10)
+
+
 
 
 startGroup = {
@@ -134,16 +179,18 @@ subGroupsValueCols = []
 for i in groupsDict:
     for j in groupsDict[i]:
         for k in groupsDict[i][j]:
-            worksheet.write(currentGroup["row"], currentGroup["col"], groupsDict[i][j][k],percent_fmt)
-            worksheet.write(currentGroup["row"] - 1, currentGroup["col"], k)
+            worksheet.write(currentGroup["row"], currentGroup["col"], groupsDict[i][j][k],percent_center_fmt)
+            worksheet.write(currentGroup["row"] - 1, currentGroup["col"], k, field_name)
             currentGroup['col'] += 1
             numSubGroupFields += 1
             # groupTot += groupsDict[i][j][k]
+        worksheet.write_blank(currentGroup["row"] - 1, currentGroup["col"],'none', subGroupMaxFormat)
         worksheet.write_formula(currentGroup["row"], currentGroup["col"],'=SUM({}:{})'.format(xl_rowcol_to_cell(startSubGroup["row"], startSubGroup["col"]), xl_rowcol_to_cell(currentGroup["row"],currentGroup['col'] - 1)),subGroupMaxFormat)
         subGroupsValueCols.append(currentGroup["col"])
         for h in range(1,numberStudents+1):
             for s in range (1, numSubGroupFields + 1):
                 weightCell = xl_rowcol_to_cell(currentGroup['row'], currentGroup['col'] - s)
+                worksheet.write_blank(currentGroup['row'] + h, currentGroup['col'] - s, 'none', fieldValueFormat)
                 formulaString += '+({}*{})'.format(weightCell, xl_rowcol_to_cell(currentGroup['row'] + h, currentGroup['col'] - s)) ##move rows to get aliiggn, currentGroup row moves without saving
             worksheet.write_formula(currentGroup['row'] + h, currentGroup['col'], '=' + formulaString, subgroupSumFormat)
             formulaString = ""
@@ -157,22 +204,30 @@ for i in groupsDict:
     startGroup['row'] = currentGroup['row']
 
 
+startGroup['col'] = currentGroup["col"]
+startGroup['row'] = currentGroup['row'] - 1
+
 for i in range(0, numberStudents + 1):
     formulaString = ""
     for j in subGroupsValueCols:
         formulaString += "+{}".format(xl_rowcol_to_cell(currentGroup["row"] + i ,j))
-    worksheet.write_formula(currentGroup['row'] + i, currentGroup["col"], formulaString, percent_fmt if (i == 0) else None)
+    worksheet.write_formula(currentGroup['row'] + i, currentGroup["col"], formulaString, totalMaxFormat if (i == 0) else totalValueFormat)
     formulaString = ""
-
-
 
 currentGroup['col'] += 1
 
+merge_format.set_bottom(1)
+worksheet.merge_range(startGroup['row'] - 1, startGroup['col'], currentGroup['row'] - 1, currentGroup['col'], 'Final', merge_format)
 
-
+# Create new format for this, will be used for N and for grade bellow it, figure out how to do auto grade adapting
+worksheet.write_string(currentGroup['row'], currentGroup['col'], 'N', totalValueFormat)
         
 
 
+for i in range(1,numberStudents+1):
+    worksheet.write_number((10+i),0,i,num_format)
+    worksheet.write_string((10+i),1,'Aluno/a',student_format)
+    
 
 
 
