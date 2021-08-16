@@ -1,28 +1,26 @@
-import xlsxwriter
+import xlsxwriter, json
 from xlsxwriter.utility import xl_cell_to_rowcol, xl_cell_to_rowcol_abs, xl_rowcol_to_cell
 
+f = open('data.json')
 
-school = 'Agrupamento de Escolas Santa Iria de Azoia'
-school_year = 'Ano Letivo de 2020/2021'
-className = 'Turma: 6ºB'
+data = json.load(f)
+
+
+school = data['school']
+school_year = data['school_year']
+className = data['className']
 numberStudents = 30
 
 def getTermString(term):
     return 'Inglês - Avaliação {}º Período'.format(term)
 
-workbook = xlsxwriter.Workbook('grade.xlsx')
+workbook = xlsxwriter.Workbook(data['filename'])
 
-grades = {
-    "Fraco" : 0,
-    "N Satisfaz" : 20,
-    "Satisfaz Pouco" : 50,
-    "Satisfaz" : 60,
-    "ta pog" : 70
-}
+grades = data['grades']
 
 
 
-gradeSheet = workbook.add_worksheet("Notas")
+gradeSheet = workbook.add_worksheet(data['gradeSheetName'])
 
 gradeSheet.write_string(1,1, "Mínimo")
 gradeSheet.write_string(1,2, "Nota")

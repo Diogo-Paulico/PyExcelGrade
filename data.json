@@ -1,0 +1,128 @@
+{
+    "filename": "grade.xlsx",
+    "school": "Agrupamento de Escolas Santa Iria de Azoia",
+    "school_year": "Ano Letivo de 2020/2021",
+    "className": "Turma: 6ºB",
+    "gradeSheetName": "Notas",
+    "grades":{
+        "Fraco" : 0,
+        "N Satisfaz" : 20,
+        "Satisfaz Pouco" : 50,
+        "Satisfaz" : 60,
+        "ta pog" : 70
+    },
+    "students":[
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a"
+    ],
+    "sheets":[
+        {
+        "sheetName": "Avaliação 1.º Período",
+        "groups":{
+            "Capacidades e Conhecimentos": {
+                "1": {
+                    "DIAG" : 0,
+                    "Teste 1": 0.25,
+                    "Teste 2": 0.25
+                },
+                "2": {
+                    "Dim. Pratica": 0.1,
+                    "Leit": 0.05,
+                    "Oral": 0.05,
+                    "Escr": 0.05
+                }
+            },
+            "Atitudes e Valores":{
+                "1":{
+                    "R/RESP": 0.08,
+                    "I/EM": 0.05,
+                    "CTAR": 0.08,
+                    "AUT": 0.02,
+                    "PONT": 0.02
+                }
+            }
+         }  
+        },
+        {
+            "sheetName": "Avaliação 2.º Período",
+            "groups":{
+                "Capacidades e Conhecimentos": {
+                    "1": {
+                        "DIAG" : 0,
+                        "Teste 1": 0.25,
+                        "Teste 2": 0.25
+                    },
+                    "2": {
+                        "Dim. Pratica": 0.1,
+                        "Leit": 0.05,
+                        "Oral": 0.05,
+                        "Escr": 0.05
+                    }
+                },
+                "Atitudes e Valores":{
+                    "1":{
+                        "R/RESP": 0.08,
+                        "I/EM": 0.05,
+                        "CTAR": 0.08,
+                        "AUT": 0.02,
+                        "PONT": 0.02
+                    }
+                }
+             }  
+            },
+            {
+                "sheetName": "Avaliação 3.º Período",
+                "groups":{
+                    "Capacidades e Conhecimentos": {
+                        "1": {
+                            "DIAG" : 0,
+                            "Teste 1": 0.25,
+                            "Teste 2": 0.25
+                        },
+                        "2": {
+                            "Dim. Pratica": 0.1,
+                            "Leit": 0.05,
+                            "Oral": 0.05,
+                            "Escr": 0.05
+                        }
+                    },
+                    "Atitudes e Valores":{
+                        "1":{
+                            "R/RESP": 0.08,
+                            "I/EM": 0.05,
+                            "CTAR": 0.08,
+                            "AUT": 0.02,
+                            "PONT": 0.02
+                        }
+                    }
+                 }  
+                }
+    ]
+
+}
