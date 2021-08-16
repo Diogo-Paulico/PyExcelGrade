@@ -9,7 +9,7 @@ data = json.load(f)
 school = data['school']
 school_year = data['school_year']
 className = data['className']
-numberStudents = 30
+numberStudents = len(data['students'])
 
 def getTermString(term):
     return 'Inglês - Avaliação {}º Período'.format(term)
@@ -35,7 +35,7 @@ for y in grades:
     gradeSheet.write_string(currentRow,2,y)
     currentRow+=1
 
-# gradeSheet.protect()
+gradeSheet.protect()
 
 
 
@@ -113,31 +113,6 @@ field_name.set_top(1)
 field_name.set_bold()
 field_name.set_font_size(9)
 
-
-groupsDict = {
-    "Capacidades e Conhecimentos": {
-        1: {
-            "DIAG" : 0,
-            "Teste 1": 0.25,
-            "Teste 2": 0.25
-        },
-        2: {
-            "Dim. Pratica": 0.1,
-            "Leit": 0.05,
-            "Oral": 0.05,
-            "Escr": 0.05
-        }
-    },
-    "Atitudes e Valores":{
-        1:{
-            "R/RESP": 0.08,
-            "I/EM": 0.05,
-            "CTAR": 0.08,
-            "AUT": 0.02,
-            "PONT": 0.02
-        }
-    }
-}
 
 group_titles_format = workbook.add_format()
 group_titles_format.set_right(6)
@@ -250,14 +225,14 @@ def buildSheet(groups, num, prevEval, sheetName):
     subGroupsValueCols = []
     worksheet.merge_range('A9:A10','Nº', merge_format)
 
-    for i in groupsDict:
-        for j in groupsDict[i]:
-            for k in groupsDict[i][j]:
-                worksheet.write(currentGroup["row"], currentGroup["col"], groupsDict[i][j][k],percent_center_fmt)
+    for i in groups:
+        for j in groups[i]:
+            for k in groups[i][j]:
+                worksheet.write(currentGroup["row"], currentGroup["col"], groups[i][j][k],percent_center_fmt)
                 worksheet.write(currentGroup["row"] - 1, currentGroup["col"], k, field_name)
                 currentGroup['col'] += 1
                 numSubGroupFields += 1
-                # groupTot += groupsDict[i][j][k]
+                # groupTot += groups[i][j][k]
             worksheet.write_blank(currentGroup["row"] - 1, currentGroup["col"],'none', subGroupMaxFormat)
             worksheet.write_formula(currentGroup["row"], currentGroup["col"],'=SUM({}:{})'.format(xl_rowcol_to_cell(startSubGroup["row"], startSubGroup["col"]), xl_rowcol_to_cell(currentGroup["row"],currentGroup['col'] - 1)),subGroupMaxFormat)
             subGroupsValueCols.append(currentGroup["col"])
@@ -299,7 +274,7 @@ def buildSheet(groups, num, prevEval, sheetName):
         worksheet.write_string(currentGroup['row'], currentGroup['col'], 'N', gradeFormat)
 
         for k in range(1,numberStudents + 1):
-            worksheet.write_formula(currentGroup['row'] + k, currentGroup['col'], '=IF({}=0,"",LOOKUP({},Notas!{},Notas!{}))'.format(xl_rowcol_to_cell(currentGroup['row'] + k, currentGroup['col'] - 1),xl_rowcol_to_cell(currentGroup['row'] + k, currentGroup['col'] - 1), valuesRange, gradesRange), gradeFormat)
+            worksheet.write_formula(currentGroup['row'] + k, currentGroup['col'], '=IF({}=0,"",LOOKUP({},{}!{},{}!{}))'.format(xl_rowcol_to_cell(currentGroup['row'] + k, currentGroup['col'] - 1),xl_rowcol_to_cell(currentGroup['row'] + k, currentGroup['col'] - 1), data['gradeSheetName'],valuesRange, data['gradeSheetName'],gradesRange), gradeFormat)
 
         merge_format.set_bottom(1)
         worksheet.merge_range(startGroup['row'] - 1, startGroup['col'], currentGroup['row'] - 1, currentGroup['col'], 'Final', merge_format)
@@ -348,15 +323,24 @@ def buildSheet(groups, num, prevEval, sheetName):
 
     for i in range(1,numberStudents+1):
         worksheet.write_number((10+i),0,i,num_format)
-        worksheet.write_string((10+i),1,'Aluno/a',student_format)
+        worksheet.write_string((10+i),1, data['students'][i-1],student_format)
         
 
     worksheet.merge_range('B9:B10', 'Nome', nameFormat)
     return prevEval
 
 
-prevEval = buildSheet('',1,{}, "Avaliação 1.º Período")
-prevEval = buildSheet('',2,prevEval,'Avaliação 2.º Período')
-prevEval = buildSheet('',3,prevEval,'Avaliação 3.º Período')
+i = 1
+prevEval = {}
+for sheet in data['sheets']:
+    # currSheet = data['sheets'][sheet]
+    prevEval = buildSheet(sheet['groups'], i, prevEval, sheet['sheetName'])
+    i += 1
+
+
+
+# prevEval = buildSheet('',1,{}, "Avaliação 1.º Período")
+# prevEval = buildSheet('',2,prevEval,'Avaliação 2.º Período')
+# prevEval = buildSheet('',3,prevEval,'Avaliação 3.º Período')
 
 workbook.close()
