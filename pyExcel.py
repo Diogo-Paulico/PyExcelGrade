@@ -256,6 +256,7 @@ def buildSheet(groups, num, prevEval, sheetName):
     startGroup['col'] = currentGroup["col"]
     startGroup['row'] = currentGroup['row'] - 1
 
+
     prevEval[sheetName] = {
         "row": currentGroup['row'], # not the first student grade, but where the 100% is in final
         "col": currentGroup['col']
@@ -269,6 +270,11 @@ def buildSheet(groups, num, prevEval, sheetName):
         formulaString = ""
 
     if num == 1:
+        student_grades = {
+            "row": currentGroup['row'] + 1,
+            "col": currentGroup['col']
+        }
+
         currentGroup['col'] += 1
 
         worksheet.write_string(currentGroup['row'], currentGroup['col'], 'N', gradeFormat)
@@ -305,6 +311,11 @@ def buildSheet(groups, num, prevEval, sheetName):
             formulaString += ')/' + str(len(prevEval))
             worksheet.write_formula(currentGroup['row'] + i, currentGroup['col'], formulaString, getFormating(1,-1))
 
+        student_grades = {
+            "row": currentGroup['row'] + 1,
+            "col": currentGroup['col']
+        }
+
         currentGroup['col'] += 1
         worksheet.write_string(currentGroup['row'], currentGroup['col'], 'N', getFormating(1,-1))
 
@@ -324,7 +335,31 @@ def buildSheet(groups, num, prevEval, sheetName):
     for i in range(1,numberStudents+1):
         worksheet.write_number((10+i),0,i,num_format)
         worksheet.write_string((10+i),1, data['students'][i-1],student_format)
-        
+        currentGroup['row'] = 10 + i + 2   
+    currentGroup['col'] = 1
+
+    title_neg_format = workbook.add_format()
+    title_neg_format.set_align('center')
+    title_neg_format.set_border(2)
+
+    title_neg_red = workbook.add_format()
+    title_neg_red.set_align('center')
+    title_neg_red.set_border(2)
+    title_neg_red.set_color('red')
+
+    title_neg_red_per = workbook.add_format()
+    title_neg_red_per.set_align('center')
+    title_neg_red_per.set_border(2)
+    title_neg_red_per.set_color('red')
+    title_neg_red_per.set_num_format('0.00%')
+
+    worksheet.write_string(currentGroup['row'],currentGroup['col'], 'Nº Alunos', title_neg_format)
+    worksheet.write_formula(currentGroup['row'], currentGroup['col'] + 1, '=COUNTIF({}:{},">0")'.format(xl_rowcol_to_cell(student_grades['row'], student_grades['col']), xl_rowcol_to_cell(student_grades['row'] + numberStudents - 1, student_grades['col'])), title_neg_format)
+    worksheet.write_string(currentGroup['row'] + 1,currentGroup['col'], 'Nº Negativas', title_neg_format)
+    worksheet.write_formula(currentGroup['row'] + 1, currentGroup['col'] + 1, '=COUNTIFS({}:{},"<50",{}:{},">0")'.format(xl_rowcol_to_cell(student_grades['row'], student_grades['col']), xl_rowcol_to_cell(student_grades['row'] + numberStudents -1 , student_grades['col']),xl_rowcol_to_cell(student_grades['row'], student_grades['col']), xl_rowcol_to_cell(student_grades['row'] + numberStudents - 1, student_grades['col'])), title_neg_format)
+    worksheet.write_string(currentGroup['row'] + 2,currentGroup['col'], '% Negativas', title_neg_red)
+    worksheet.write_formula(currentGroup['row'] + 2,currentGroup['col'] + 1, '=IF(ISERROR(({}/{}) = 0),"0%",({}/{}))'.format(xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1)), title_neg_red_per)
+
 
     worksheet.merge_range('B9:B10', 'Nome', nameFormat)
     return prevEval
