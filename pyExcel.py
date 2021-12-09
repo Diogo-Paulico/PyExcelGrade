@@ -1,7 +1,7 @@
-import xlsxwriter, json
+import xlsxwriter, json, sys
 from xlsxwriter.utility import xl_cell_to_rowcol, xl_cell_to_rowcol_abs, xl_rowcol_to_cell
 
-f = open('data.json')
+f = open(sys.argv[1])
 
 data = json.load(f)
 
@@ -12,7 +12,7 @@ className = data['className']
 numberStudents = len(data['students'])
 
 def getTermString(term):
-    return 'Inglês - Avaliação {}º Período'.format(term)
+    return data['classTerm'].format(term)
 
 workbook = xlsxwriter.Workbook(data['filename'])
 
@@ -35,7 +35,7 @@ for y in grades:
     gradeSheet.write_string(currentRow,2,y)
     currentRow+=1
 
-gradeSheet.protect()
+gradeSheet.hide()
 
 
 
@@ -358,7 +358,7 @@ def buildSheet(groups, num, prevEval, sheetName):
     worksheet.write_string(currentGroup['row'] + 1,currentGroup['col'], 'Nº Negativas', title_neg_format)
     worksheet.write_formula(currentGroup['row'] + 1, currentGroup['col'] + 1, '=COUNTIFS({}:{},"<50",{}:{},">0")'.format(xl_rowcol_to_cell(student_grades['row'], student_grades['col']), xl_rowcol_to_cell(student_grades['row'] + numberStudents -1 , student_grades['col']),xl_rowcol_to_cell(student_grades['row'], student_grades['col']), xl_rowcol_to_cell(student_grades['row'] + numberStudents - 1, student_grades['col'])), title_neg_format)
     worksheet.write_string(currentGroup['row'] + 2,currentGroup['col'], '% Negativas', title_neg_red)
-    worksheet.write_formula(currentGroup['row'] + 2,currentGroup['col'] + 1, '=IF(ISERROR(({}/{}) = 0),"0%",({}/{}))'.format(xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1)), title_neg_red_per)
+    worksheet.write_formula(currentGroup['row'] + 2,currentGroup['col'] + 1, '=IF(ISERROR(({}/{}) = 0),"0%",({}/{}))'.format(xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col']), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1), xl_rowcol_to_cell(currentGroup['row'] + 1, currentGroup['col'] + 1)), title_neg_red_per)
 
 
     worksheet.merge_range('B9:B10', 'Nome', nameFormat)

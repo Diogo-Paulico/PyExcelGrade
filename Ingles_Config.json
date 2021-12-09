@@ -1,0 +1,123 @@
+{
+    "filename": "Ingles_2Ciclo_Grelha.xlsx",
+    "school": "Agrupamento de Escolas Santa Iria de Azoia",
+    "school_year": "Ano Letivo de 2021/2022",
+    "className": "Turma: ",
+    "gradeSheetName": "Notas",
+    "classTerm": "Inglês - Avaliação {}º Período",
+    "grades":{
+        "1" : 0,
+        "2" : 20,
+        "3" : 50,
+        "4" : 70,
+        "5" : 90
+    },
+    "students":[
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a",
+        "Aluno/a"
+    ],
+    "sheets":[
+        {
+        "sheetName": "1.ºP",
+        "groups":{
+            "Capacidades e Conhecimentos": {
+                "1": {
+                    "DIAG" : 0,
+                    "Oral" : 0.275,
+                    "Escrita" : 0.275
+                },
+                "2":{                
+                    "C/Intercultural": 0.1,
+                    "C/Estratégica": 0.1
+                }
+            },
+            "Atitudes e Valores":{
+                "1":{
+                    "R/RESP": 0.06,
+                    "I/EM": 0.05,
+                    "CTAR": 0.1,
+                    "AUT": 0.02,
+                    "PONT": 0.02
+                }
+            }
+         }  
+        },
+        {
+            "sheetName": "2.ºP",
+            "groups":{
+                "Capacidades e Conhecimentos": {
+                    "1": {
+                        "DIAG" : 0,
+                        "Oral" : 0.275,
+                        "Escrita" : 0.275
+                    },
+                    "2":{                
+                        "C/Intercultural": 0.1,
+                        "C/Estratégica": 0.1
+                    }
+                },
+                "Atitudes e Valores":{
+                    "1":{
+                        "R/RESP": 0.06,
+                        "I/EM": 0.05,
+                        "CTAR": 0.1,
+                        "AUT": 0.02,
+                        "PONT": 0.02
+                    }
+                }
+             }     
+            },
+            {
+                "sheetName": "3.ºP",
+                "groups":{
+                    "Capacidades e Conhecimentos": {
+                        "1": {
+                            "DIAG" : 0,
+                            "Oral" : 0.275,
+                            "Escrita" : 0.275
+                        },
+                        "2":{                
+                            "C/Intercultural": 0.1,
+                            "C/Estratégica": 0.1
+                        }
+                    },
+                    "Atitudes e Valores":{
+                        "1":{
+                            "R/RESP": 0.06,
+                            "I/EM": 0.05,
+                            "CTAR": 0.1,
+                            "AUT": 0.02,
+                            "PONT": 0.02
+                        }
+                    }
+                 }   
+                }
+    ]
+
+}
